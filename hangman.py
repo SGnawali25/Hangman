@@ -227,8 +227,8 @@ if __name__ == "__main__":
         print()
         print(player.upper(),"TURN")
         secret_word = choose_word(wordlist)
-        score = hangman_with_hints(secret_word)
-        players[player] = score
+        scores = hangman_with_hints(secret_word)
+        players[player] = scores
 
     winner(players)
 
