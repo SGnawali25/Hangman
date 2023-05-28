@@ -1,7 +1,25 @@
 import random
 import string
+import requests
+
+API_KEY = "249b6a80-1294-4cd7-95d8-cf1ed0da992a"
 
 WORDLIST_FILENAME = "words.txt"
+
+def get_definition(word):
+    url = f"https://www.dictionaryapi.com/api/v3/references/collegiate/json/{word}?key={API_KEY}"
+    response = requests.get(url)
+    if response.status_code == 200:
+        definition = response.json()[0]['shortdef'][0]
+        return definition
+    else:
+        return "Error: Unable to fetch definition"
+    
+def show_meaning(word):
+    print("--------------------------------------------------------------------------------------------------")
+    print(get_definition(word))
+    print("--------------------------------------------------------------------------------------------------")
+
 
 def load_words():
     """
@@ -106,6 +124,7 @@ def show_possible_matches(my_word, letters_guessed):
     count = 0
     for word in wordlist:
             if match_with_gaps(my_word, word, letters_guessed):
+                '''to print ten words per line'''
                 if count % 10 == 0:
                     print()
                     print(word, end='  ')
@@ -165,7 +184,9 @@ def hangman_with_hints(secret_word):
             guessed_word = get_guessed_word(secret_word, letters_guessed)
             show_possible_matches(guessed_word,letters_guessed)
             get_available_letters(letters_guessed)
-
+        elif guess == "#":
+            print("The meaning of the word is:")
+            show_meaning(secret_word)
         else:
             guess = guess.lower()
             if not guess.isalpha() or guess in letters_guessed or len(guess) > 1:
